@@ -15,7 +15,7 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         Info info = new Info()
                 .title("HAWMOCK API Document")
-                .description("OBT 프로젝트 API 명세서입니다.");
+                .description("HAWMOCK 프로젝트 API 명세서입니다.");
 
         SecurityScheme bearerAuth = new SecurityScheme()
                 .type(SecurityScheme.Type.HTTP)
