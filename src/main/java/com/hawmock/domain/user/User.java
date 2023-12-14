@@ -16,11 +16,16 @@ public class User extends BaseEntity {
     @Column(name = "user_id")
     private Long id;
 
+    private String email;
+
     private String name;
 
     private String password;
 
     private boolean isActivated;
+
+    @Enumerated(EnumType.STRING)
+    private SocialProvider socialProvider;
 
     @Enumerated(EnumType.STRING)
     private Role role;
