@@ -25,8 +25,8 @@ public class User extends BaseEntity {
     private boolean isActivated;
 
     @Enumerated(EnumType.STRING)
-    private SocialProvider socialProvider;
+    private ProviderType providerType;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private RoleType roleType;
 }
