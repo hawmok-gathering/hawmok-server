@@ -24,6 +24,10 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
+                .oauth2Login(oauth2 ->
+                        oauth2
+                                .loginPage("/login")
+                )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 "/*"
