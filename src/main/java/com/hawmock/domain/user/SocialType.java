@@ -3,7 +3,7 @@ package com.hawmock.domain.user;
 import lombok.Getter;
 
 @Getter
-public enum ProviderType {
+public enum SocialType {
     GOOGLE,
     LOCAL
 }

@@ -1,5 +1,6 @@
 package com.hawmock.global.oauth.token;
 
+import com.hawmock.global.oauth.exception.TokenValidFailedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ public class AuthTokenProvider {
 
             return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
         } else {
-            throw new RuntimeException();
+            throw new TokenValidFailedException();
         }
     }
 }

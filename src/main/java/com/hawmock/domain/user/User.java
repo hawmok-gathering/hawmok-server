@@ -20,13 +20,30 @@ public class User extends BaseEntity {
 
     private String name;
 
-    private String password;
-
     private boolean isActivated;
 
     @Enumerated(EnumType.STRING)
-    private ProviderType providerType;
+    private SocialType socialType;
 
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
+
+    private String imageUrl;
+
+    public User(String email, String name, boolean isActivated, SocialType socialType, RoleType roleType, String imageUrl) {
+        this.email = email;
+        this.name = name;
+        this.isActivated = isActivated;
+        this.socialType = socialType;
+        this.roleType = roleType;
+        this.imageUrl = imageUrl;
+    }
+
+    public void updateImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void updateName(String name) {
+        this.name = name;
+    }
 }
