@@ -1,4 +1,4 @@
-package com.hawmock.global.oauth.entity;
+package com.hawmock.application;
 
 import com.hawmock.domain.user.RoleType;
 import com.hawmock.domain.user.SocialType;
@@ -21,7 +21,7 @@ import java.util.Map;
 @Getter
 @RequiredArgsConstructor
 public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
-    private final String email;
+    private final String name;
     private final SocialType socialType;
     private final RoleType roleType;
     private final Collection<GrantedAuthority> authorities;
@@ -46,12 +46,12 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
 
     @Override
     public String getName() {
-        return email;
+        return name;
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return name;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
 
     public static UserPrincipal create(User user) {
         return new UserPrincipal(
-                user.getEmail(),
+                user.getName(),
                 user.getSocialType(),
                 RoleType.USER,
                 Collections.singletonList(new SimpleGrantedAuthority(RoleType.USER.getCode()))

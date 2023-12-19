@@ -1,10 +1,9 @@
-package com.hawmock.global.oauth;
+package com.hawmock.application;
 
 import com.hawmock.domain.user.RoleType;
 import com.hawmock.domain.user.SocialType;
 import com.hawmock.domain.user.User;
 import com.hawmock.domain.user.UserRepository;
-import com.hawmock.global.oauth.entity.UserPrincipal;
 import com.hawmock.global.oauth.exception.OAuthProviderMissMatchException;
 import com.hawmock.global.oauth.info.OAuth2UserInfo;
 import com.hawmock.global.oauth.info.OAuth2UserInfoFactory;
@@ -16,11 +15,10 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.webjars.NotFoundException;
 
 @Service
 @RequiredArgsConstructor
-public class CustomOauth2UserService extends DefaultOAuth2UserService {
+public class Oauth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
 
@@ -32,7 +30,6 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         try {
             return this.process(userRequest, user);
         } catch (Exception ex) {
-            ex.printStackTrace();
             throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
         }
     }
@@ -41,8 +38,8 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         SocialType socialType = SocialType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(socialType, user.getAttributes());
-        User savedUser = userRepository.findUserByEmailAndSocialType(userInfo.getEmail(), socialType)
-                .orElseThrow(() -> new NotFoundException("user not found"));
+
+        User savedUser = userRepository.findUserByEmailAndSocialType(userInfo.getEmail(), socialType);
 
         if (savedUser != null) {
             if (socialType != savedUser.getSocialType()) {
@@ -72,11 +69,16 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
     }
 
     private void updateUser(User user, OAuth2UserInfo userInfo) {
-        if (userInfo.getName() != null && !user.getName().equals(userInfo.getName()))
-            user.updateName(userInfo.getName());
-
-        if (userInfo.getImageUrl() != null && !user.getImageUrl().equals(userInfo.getImageUrl())) {
-            user.updateImageUrl(userInfo.getImageUrl());
+        if (isUpdatedUsername(user, userInfo) || isUpdatedUserImageUrl(user, userInfo)) {
+            user.update(userInfo.getName(), userInfo.getImageUrl());
         }
+    }
+
+    private static boolean isUpdatedUserImageUrl(User user, OAuth2UserInfo userInfo) {
+        return userInfo.getImageUrl() != null && !user.getImageUrl().equals(userInfo.getImageUrl());
+    }
+
+    private static boolean isUpdatedUsername(User user, OAuth2UserInfo userInfo) {
+        return userInfo.getName() != null && !user.getName().equals(userInfo.getName());
     }
 }

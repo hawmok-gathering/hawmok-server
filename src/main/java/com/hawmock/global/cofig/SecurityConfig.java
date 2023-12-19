@@ -18,7 +18,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig implements WebMvcConfigurer {
+public class SecurityConfig implements WebMvcConfigurer {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -26,7 +26,9 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
-                .oauth2Login(withDefaults())
+                .oauth2Login(it ->
+                        it.defaultSuccessUrl("/success")
+                )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 "/*"
@@ -54,6 +56,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowCredentials(true)
                 .allowedHeaders("*")
+                .allowedOriginPatterns("*")
                 .allowedMethods(Arrays.stream(HttpMethod.values()).map(String::valueOf).toArray(String[]::new));
     }
 }
