@@ -1,5 +1,7 @@
 package com.hawmock.global.oauth.token;
 
+import com.hawmock.global.error.ErrorCode;
+import com.hawmock.global.error.HawmockException;
 import io.jsonwebtoken.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -81,6 +83,6 @@ public class AuthToken {
             log.info("Expired JWT token.");
             return e.getClaims();
         }
-        return null;
+        throw new HawmockException(ErrorCode.NOT_EXPIRED_TOKEN_YET);
     }
 }

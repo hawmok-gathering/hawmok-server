@@ -61,7 +61,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         Optional<String> redirectUri = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
 
-        if(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
+        if (redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
             throw new IllegalArgumentException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
         }
 
@@ -92,13 +92,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         );
 
         // DB 저장
-        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(userInfo.getId());
-        if (userRefreshToken != null) {
-            userRefreshToken.updateRefreshToken(refreshToken.getToken());
-        } else {
-            userRefreshToken = UserRefreshToken.create(userInfo.getId(), refreshToken.getToken());
-            userRefreshTokenRepository.saveAndFlush(userRefreshToken);
-        }
+        userRefreshTokenRepository.findByUserId(userInfo.getId())
+                .ifPresentOrElse(
+                        userRefreshToken -> updateExistingToken(userRefreshToken, refreshToken),
+                        () -> saveNewToken(userInfo.getId(), refreshToken)
+                );
 
         int cookieMaxAge = (int) refreshTokenExpiry / 60;
 
@@ -107,7 +105,17 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", accessToken.getToken())
-                .build().toUriString();
+                .build()
+                .toUriString();
+    }
+
+    private void updateExistingToken(UserRefreshToken userRefreshToken, AuthToken refreshToken) {
+        userRefreshToken.updateRefreshToken(refreshToken.getToken());
+    }
+
+    private void saveNewToken(String userId, AuthToken refreshToken) {
+        UserRefreshToken userRefreshToken = UserRefreshToken.create(userId, refreshToken.getToken());
+        userRefreshTokenRepository.save(userRefreshToken);
     }
 
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {

@@ -40,7 +40,7 @@ public class AuthTokenProvider {
 
     public Authentication getAuthentication(AuthToken authToken) {
 
-        if(authToken.validate()) {
+        if (authToken.validate()) {
 
             Claims claims = authToken.getTokenClaims();
             Collection<? extends GrantedAuthority> authorities =

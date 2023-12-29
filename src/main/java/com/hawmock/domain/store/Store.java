@@ -2,6 +2,7 @@ package com.hawmock.domain.store;
 
 import com.hawmock.domain.BaseEntity;
 import com.hawmock.domain.area.Area;
+import com.hawmock.domain.introduce.Introduce;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,8 +25,6 @@ public class Store extends BaseEntity {
 
     private String phone;
 
-    private String content;
-
     private String address;
 
     private int hallCapacity;
@@ -47,4 +46,8 @@ public class Store extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "area_id")
     private Area area;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "introduce_id")
+    private Introduce introduce;
 }
