@@ -1,5 +1,5 @@
 package com.hawmock.domain.user;
 
-public enum SocialProvider {
+public enum SocialType {
     GOOGLE
 }

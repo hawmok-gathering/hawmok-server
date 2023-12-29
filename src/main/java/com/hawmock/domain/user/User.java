@@ -12,21 +12,47 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
+
+    private String socialId;
 
     private String email;
 
     private String name;
 
-    private String password;
-
     private boolean isActivated;
 
     @Enumerated(EnumType.STRING)
-    private SocialProvider socialProvider;
+    private SocialType socialType;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private RoleType roleType;
+
+    private String profileImageUrl;
+
+
+    private User (String socialId, String name, String email, String imageUrl, SocialType socialType, RoleType roleType) {
+        this.socialId = socialId;
+        this.name = name;
+        this.email = email;
+        this.profileImageUrl = imageUrl;
+        this.socialType = socialType;
+        this.roleType = roleType;
+    }
+
+
+    public static User create(String socialId, String name, String email, String imageUrl, SocialType socialType, RoleType roleType) {
+        return new User(socialId, name, email, imageUrl, socialType, roleType);
+    }
+
+    public void updateUsername(String name) {
+        this.name = name;
+    }
+
+    public void updateProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
 }

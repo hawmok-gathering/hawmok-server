@@ -1,4 +1,4 @@
-package com.hawmock.global.cofig;
+package com.hawmock.global.config.swagger;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
