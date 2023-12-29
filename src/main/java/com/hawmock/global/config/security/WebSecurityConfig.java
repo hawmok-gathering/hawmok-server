@@ -2,6 +2,7 @@ package com.hawmock.global.config.security;
 
 import com.hawmock.domain.user.UserRefreshTokenRepository;
 import com.hawmock.global.config.properties.AppProperties;
+import com.hawmock.global.oauth.exception.RestAuthenticationEntryPoint;
 import com.hawmock.global.oauth.handler.OAuth2AuthenticationFailureHandler;
 import com.hawmock.global.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.hawmock.global.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
@@ -39,6 +40,10 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(securitySessionManagementConfigurer ->
                         securitySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
+                        httpSecurityExceptionHandlingConfigurer
+                                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(

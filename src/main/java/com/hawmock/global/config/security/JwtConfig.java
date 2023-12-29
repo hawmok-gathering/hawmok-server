@@ -1,4 +1,4 @@
-package com.hawmock.global.config;
+package com.hawmock.global.config.security;
 
 import com.hawmock.global.oauth.token.AuthTokenProvider;
 import org.springframework.beans.factory.annotation.Value;
