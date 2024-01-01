@@ -15,7 +15,9 @@ public class Area extends BaseEntity {
     @Column(name = "area_id")
     private Long id;
 
-    private String areaName;
+    @Enumerated(EnumType.STRING)
+    private CityType cityType;
 
-    private String localName;
+    @Enumerated(EnumType.STRING)
+    private LocalType localType;
 }

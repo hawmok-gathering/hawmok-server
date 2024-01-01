@@ -5,6 +5,7 @@ import com.hawmock.global.config.properties.AppProperties;
 import com.hawmock.global.oauth.exception.RestAuthenticationEntryPoint;
 import com.hawmock.global.oauth.handler.OAuth2AuthenticationFailureHandler;
 import com.hawmock.global.oauth.handler.OAuth2AuthenticationSuccessHandler;
+import com.hawmock.global.oauth.handler.TokenAccessDeniedHandler;
 import com.hawmock.global.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.hawmock.global.oauth.service.CustomOAuth2UserService;
 import com.hawmock.global.oauth.token.AuthTokenProvider;
@@ -31,6 +32,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     private final AuthTokenProvider tokenProvider;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
     private final CustomOAuth2UserService oAuth2UserService;
+    private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -44,6 +46,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
                         httpSecurityExceptionHandlingConfigurer
                                 .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                                .accessDeniedHandler(tokenAccessDeniedHandler)
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
@@ -51,7 +54,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                                 "/swagger-ui/**"
                         ).permitAll()
                         .requestMatchers(
-                                "/*"
+                                "/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -111,4 +114,5 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     public OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler() {
         return new OAuth2AuthenticationFailureHandler(oAuth2AuthorizationRequestBasedOnCookieRepository());
     }
+
 }

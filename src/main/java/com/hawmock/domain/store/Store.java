@@ -15,7 +15,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Store extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "store_id")
     private Long id;
 
@@ -24,8 +25,6 @@ public class Store extends BaseEntity {
     private String storeImageUrl;
 
     private String phone;
-
-    private String address;
 
     private int hallCapacity;
 
@@ -43,11 +42,15 @@ public class Store extends BaseEntity {
 
     private LocalDateTime weekend_end_time;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "area_id")
     private Area area;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "introduce_id")
     private Introduce introduce;
+
+    public int totalPeopleCapacity() {
+        return this.hallCapacity + this.roomCapacity;
+    }
 }
