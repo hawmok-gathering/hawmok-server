@@ -27,7 +27,7 @@ jobs:
           arguments: clean bootJar
 
       - name: docker image build
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hawmok-server:latest .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hawmok:latest .
 
       - name: docker login
         uses: docker/login-action@v2
