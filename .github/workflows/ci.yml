@@ -47,7 +47,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
   deploy-to-ec2:
-      needs: build-and-push-docker
+      needs: build-docker-image # 수정된 부분
       runs-on: ubuntu-latest
 
       steps:
