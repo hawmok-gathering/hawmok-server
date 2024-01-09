@@ -57,10 +57,9 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_KEY }}
-
           script: |
-            sudo docker kill ${{ secrets.DOCKERHUB_USERNAME }}/hawmok-server:latest
-            sudo docker rm -f ${{ secrets.DOCKERHUB_USERNAME }}/hawmok-server:latest
+            sudo docker kill hawmok-server
+            sudo docker rm -f hawmok-server
             sudo docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/hawmok-server:latest
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hawmok-server:latest
-            docker run -d --name hawmok-server -p 8080:8080 hawmok-server
+            docker run -d --name hawmok-server -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/hawmok-server:latest
